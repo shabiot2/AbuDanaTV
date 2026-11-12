@@ -26,7 +26,9 @@ jobs:
         run: gradle assembleRelease --no-daemon
 
       - name: Rename
-        run: cp app/build/outputs/apk/release/app-release.apk AbuDanaTV.apk
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk AbuDanaTV.apk
+          cp AbuDanaTV.apk tv.apk
 
       # Publishes the APK as a GitHub Release so it gets a fixed direct link:
       # https://github.com/<user>/<repo>/releases/latest/download/AbuDanaTV.apk
@@ -34,5 +36,7 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           name: AbuDanaTV ${{ github.run_number }}
-          files: AbuDanaTV.apk
+          files: |
+            AbuDanaTV.apk
+            tv.apk
           make_latest: true
