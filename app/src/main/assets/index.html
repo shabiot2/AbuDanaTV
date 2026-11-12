@@ -22,7 +22,11 @@
 :root[data-skin="fahm"]{--ink:#111214;--panel:#1a1c1f;--panel-2:#212327;--line:#2f3237;--gold:#f0a540;--gold-hi:#ffd08a;--text:#eceae6;--muted:#9a9a97;--glow:#26282c;--hero:#2a2318;--hero-line:#4d3d22;--on:#2d2618;--ov:rgba(8,8,9,.93);--on-accent:#111214;--pat:.05}
 :root[data-skin="raml"]{--ink:#f2ebdd;--panel:#fbf7ef;--panel-2:#fffdf8;--line:#ddd0b8;--gold:#9a6a2f;--gold-hi:#6e4618;--text:#2b2116;--muted:#7d6c56;--live:#c0392b;--glow:#ffffff;--hero:#efe1c4;--hero-line:#d7bf92;--on:#f3e4c6;--ov:rgba(242,235,221,.94);--on-accent:#fffdf8;--pat:.12;color-scheme:light}
 :root[data-skin="rukham"]{--ink:#eef1f2;--panel:#ffffff;--panel-2:#f8fafa;--line:#d4dcdf;--gold:#0f7a76;--gold-hi:#0a5653;--text:#162326;--muted:#5f7176;--live:#c0392b;--glow:#ffffff;--hero:#dcefed;--hero-line:#a9d2ce;--on:#e1f1ef;--ov:rgba(238,241,242,.94);--on-accent:#ffffff;--pat:.1;color-scheme:light}
-html,body{height:100%}
+/* base reset: the app has no outer page wrapper, so the page carries its own */
+[hidden]{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+img{max-width:100%}
+html,body{height:100%;margin:0}
 body{background:var(--ink);color:var(--text);font-family:var(--f-body);direction:rtl;overflow-x:hidden;
   background-image:radial-gradient(ellipse at 50% -20%,var(--glow) 0%,transparent 60%);}
 .pattern{position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--gold);opacity:var(--pat);
