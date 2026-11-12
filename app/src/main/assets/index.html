@@ -24,7 +24,7 @@
 :root[data-skin="rukham"]{--ink:#eef1f2;--panel:#ffffff;--panel-2:#f8fafa;--line:#d4dcdf;--gold:#0f7a76;--gold-hi:#0a5653;--text:#162326;--muted:#5f7176;--live:#c0392b;--glow:#ffffff;--hero:#dcefed;--hero-line:#a9d2ce;--on:#e1f1ef;--ov:rgba(238,241,242,.94);--on-accent:#ffffff;--pat:.1;color-scheme:light}
 html,body{height:100%}
 body{background:var(--ink);color:var(--text);font-family:var(--f-body);direction:rtl;overflow-x:hidden;
-  background-image:radial-gradient(ellipse at 50% -20%,var(--glow) 0%,transparent 60%);transition:background-color .5s,color .5s}
+  background-image:radial-gradient(ellipse at 50% -20%,var(--glow) 0%,transparent 60%);}
 .pattern{position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--gold);opacity:var(--pat);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Crect x='22' y='22' width='36' height='36'/%3E%3Crect x='22' y='22' width='36' height='36' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='9'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Crect x='22' y='22' width='36' height='36'/%3E%3Crect x='22' y='22' width='36' height='36' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='9'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px}
@@ -78,11 +78,11 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
 .section-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:clamp(8px,1vh,14px)}
 .section-h h2{margin:0;font-family:var(--f-disp);font-size:clamp(18px,1.6vw,28px);font-weight:500}
 .section-h span{color:var(--muted);font-size:clamp(12px,1vw,16px)}
-.tiles{display:grid;grid-template-columns:1.35fr 1fr repeat(3,1fr) .8fr;gap:clamp(10px,1.1vw,20px)}
+.tiles{display:grid;grid-template-columns:1.4fr repeat(6,minmax(0,1fr));gap:clamp(10px,1.1vw,20px)}
 .tile{all:unset;box-sizing:border-box;cursor:pointer;border-radius:22px;border:1px solid var(--line);background:var(--panel);
   padding:clamp(14px,1.4vw,24px);display:flex;flex-direction:column;justify-content:flex-end;gap:6px;min-height:clamp(130px,22vh,250px);
-  position:relative;overflow:hidden;transition:transform .18s ease,border-color .18s,box-shadow .18s;min-width:0}
-.tile:focus-visible,.tile:focus,.tile:hover{transform:scale(1.04);border-color:var(--gold-hi);box-shadow:0 0 0 3px var(--gold),0 18px 40px -12px rgba(0,0,0,.55);outline:none;z-index:2}
+  position:relative;overflow:hidden;transition:transform .12s ease-out;will-change:transform;min-width:0}
+.tile:focus-visible,.tile:focus,.tile:hover{transform:scale(1.05);border-color:var(--gold-hi);box-shadow:0 0 0 4px var(--gold);outline:none;z-index:2}
 .tile .k{font-size:clamp(12px,1vw,16px);color:var(--gold)}
 .tile .h{font-family:var(--f-disp);font-size:clamp(19px,1.8vw,32px);font-weight:700;line-height:1.2}
 .tile .s{font-size:clamp(12px,1vw,16px);color:var(--muted)}
@@ -93,7 +93,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
 .dot i{width:9px;height:9px;border-radius:50%;background:#fff;animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.25}}
 .meal .em{font-size:clamp(30px,3vw,52px);line-height:1;margin-bottom:auto;filter:saturate(.8)}
-.set .h{font-size:clamp(16px,1.4vw,24px)}
+.set .h{font-size:clamp(17px,1.5vw,26px)}
+.sw-mini{display:flex;gap:6px;margin-bottom:auto}.sw-mini i{width:clamp(18px,1.6vw,28px);aspect-ratio:1;border-radius:50%;border:2px solid var(--line)}
 
 .hint{color:var(--muted);font-size:clamp(11px,.9vw,15px);display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
 .hint kbd{font-family:var(--f-body);border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--text)}
@@ -101,7 +102,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
 .sound-chip:focus{box-shadow:0 0 0 3px var(--gold-hi)}
 
 /* overlays */
-.ov{position:fixed;inset:0;z-index:50;background:var(--ov);backdrop-filter:blur(8px);display:grid;place-items:center;
+.ov{position:fixed;inset:0;z-index:50;background:var(--ov);display:grid;place-items:center;
   padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .box{background:var(--panel);border:1px solid var(--line);border-radius:26px;width:min(1100px,100%);max-height:100%;overflow:auto;padding:clamp(18px,2.4vw,40px);box-sizing:border-box}
 .btn{all:unset;box-sizing:border-box;cursor:pointer;border-radius:14px;padding:12px 26px;border:1px solid var(--line);background:var(--panel-2);font-weight:600;font-size:clamp(14px,1.2vw,20px);text-align:center}
@@ -146,12 +147,12 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
 .apps{display:flex;gap:clamp(10px,1vw,18px);overflow-x:auto;padding:8px 6px 14px;scroll-padding-inline:12px;scrollbar-width:none}
 .apps::-webkit-scrollbar{display:none}
 .app-t{all:unset;box-sizing:border-box;cursor:pointer;flex:0 0 clamp(150px,11vw,210px);aspect-ratio:16/9;max-width:100%;border-radius:16px;
-  background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+  background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;position:relative;overflow:hidden;transition:transform .12s ease-out;will-change:transform}
 .app-t img{width:100%;height:100%;object-fit:cover}
 .app-t img.ico{width:46%;height:auto;object-fit:contain}
 .app-t span{position:absolute;inset:auto 0 0 0;padding:6px 10px;font-size:clamp(11px,.9vw,15px);background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
-.app-t:focus,.app-t:hover{transform:scale(1.08);box-shadow:0 0 0 3px var(--gold),0 14px 30px -10px rgba(0,0,0,.55);z-index:2;outline:none}
+.app-t:focus,.app-t:hover{transform:scale(1.08);box-shadow:0 0 0 4px var(--gold);z-index:2;outline:none}
 .app-t.more{font-family:var(--f-disp);color:var(--gold);font-size:clamp(14px,1.2vw,20px)}
 .apps-empty{color:var(--muted);font-size:clamp(13px,1vw,17px);padding:14px 4px}
 .allapps{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;max-height:62vh;overflow:auto;padding:6px}
@@ -233,7 +234,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
 
   <section>
     <div class="section-h"><h2>الرئيسية</h2><span id="soundWrap"><button class="sound-chip" id="soundBtn">اضغط OK لتفعيل صوت التنبيه</button></span></div>
-    <div class="tiles">
+    <div class="tiles" data-row>
       <button class="tile live" id="tLive" data-focus-first>
         <svg class="art" viewBox="0 0 100 100" aria-hidden="true"><g fill="currentColor"><rect x="30" y="34" width="40" height="44" rx="1"/><rect x="30" y="42" width="40" height="5" fill="#cfa95e"/></g><g fill="none" stroke="currentColor" stroke-width="2"><path d="M8 78h84"/><path d="M14 78V50M86 78V50"/><path d="M14 50q0-8 0-14M86 50q0-8 0-14"/></g></svg>
         <span class="dot"><i></i>مباشر</span>
@@ -250,16 +251,14 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
       <button class="tile meal" data-meal="b"><span class="em">🍳</span><span class="k">فطور اليوم</span><span class="h" data-name></span><span class="s" data-time></span></button>
       <button class="tile meal" data-meal="l"><span class="em">🍲</span><span class="k">غداء اليوم</span><span class="h" data-name></span><span class="s" data-time></span></button>
       <button class="tile meal" data-meal="d"><span class="em">🥗</span><span class="k">عشاء اليوم</span><span class="h" data-name></span><span class="s" data-time></span></button>
-      <div style="display:grid;gap:clamp(10px,1.1vw,20px);grid-template-rows:1fr 1fr;min-width:0">
-        <button class="tile set" id="tLib" style="min-height:0"><span class="k">مكتبة</span><span class="h">كل الوصفات</span></button>
-        <button class="tile set" id="tSet" style="min-height:0"><span class="k">الإعدادات</span><span class="h" id="setCity">المدينة</span></button>
-      </div>
+      <button class="tile set" id="tLib"><span class="em" style="font-size:clamp(30px,3vw,52px);line-height:1;margin-bottom:auto">📖</span><span class="k">مكتبة</span><span class="h">كل الوصفات</span></button>
+      <button class="tile set" id="tTheme"><span class="sw-mini" id="themeSw"></span><span class="k">الثيم · اضغط للتغيير</span><span class="h" id="themeName">كسوة</span></button>
     </div>
   </section>
 
   <section>
     <div class="section-h"><h2>تطبيقاتك</h2><span>الأكثر استخداماً أولاً</span></div>
-    <div class="apps" id="appsRow"></div>
+    <div class="apps" id="appsRow" data-row></div>
   </section>
 
   <div class="hint"><span>تنقّل بالأسهم <kbd>◀ ▶ ▲ ▼</kbd></span><span>اختيار <kbd>OK</kbd></span><span>رجوع <kbd>Back</kbd></span><span>عند دخول الوقت: تنبيه ثم انتقال تلقائي للحرم</span></div>
@@ -336,22 +335,6 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
   </div>
 </div>
 
-<!-- settings overlay -->
-<div class="ov" id="ovSet" hidden>
-  <div class="box">
-    <h3 class="box-title">الإعدادات</h3>
-    <p class="box-sub">كل اختياراتك تنحفظ تلقائياً.</p>
-    <h4 class="set-h">الموقع</h4>
-    <div class="cities" id="cityList" style="margin-bottom:22px"></div>
-    <h4 class="set-h">الثيم</h4>
-    <div class="skins" id="skinList"></div>
-    <div class="box-foot">
-      <div class="row"><button class="btn" id="testAdhan">تجربة التنبيه</button><button class="btn" id="tvSettings" hidden>إعدادات التلفزيون</button></div>
-      <button class="btn pri" data-close>تم</button>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
 <script>
 (function(){
@@ -367,7 +350,7 @@ const CITIES=[
 ];
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 // -1 = automatic (location from the internet connection)
-let cityIdx=store.get("abudana_city");cityIdx=cityIdx===null?-1:+cityIdx;if(cityIdx!==-1&&!CITIES[cityIdx])cityIdx=-1;
+let cityIdx=-1;
 let autoLoc=null;try{autoLoc=JSON.parse(store.get("abudana_autoloc")||"null")}catch(e){}
 function curCity(){if(cityIdx>=0)return CITIES[cityIdx];return autoLoc?[autoLoc.name,autoLoc.lat,autoLoc.lng]:CITIES[0]}
 function nearestName(lat,lng){let best=null,bd=1e9;CITIES.forEach(c=>{const d=Math.hypot(c[1]-lat,(c[2]-lng)*Math.cos(d2r(lat)));if(d<bd){bd=d;best=c}});return bd<0.5?best[0]:null}
@@ -380,7 +363,6 @@ async function detectLocation(){
   for(const t of tries){try{const g=await t();const lat=+g.lat,lng=+g.lng;if(!isFinite(lat)||!isFinite(lng))continue;
       autoLoc={lat,lng,name:nearestName(lat,lng)||g.city||"موقعك",at:Date.now()};store.set("abudana_autoloc",JSON.stringify(autoLoc));
       if(cityIdx===-1){todayKey="";tick()}
-      if(!$("#ovSet").hidden)renderCities();else $("#setCity").textContent=curCity()[0];
       return true}catch(e){}}
   return false;
 }
@@ -476,15 +458,6 @@ function renderLib(k){
   const list=$("#libList");list.innerHTML="";
   R[k].forEach(r=>{const b=document.createElement("button");b.className="btn";b.innerHTML=`<span>${r.n}</span><small>${r.tm} · ${r.sv}</small>`;b.onclick=()=>{close();openRecipe(r,k)};list.appendChild(b)});
 }
-function renderCities(){
-  const list=$("#cityList");list.innerHTML="";
-  const a=document.createElement("button");a.className="btn";a.style.gridColumn="1/-1";a.setAttribute("aria-pressed",cityIdx===-1);
-  a.textContent="📍 تلقائي حسب الإنترنت"+(autoLoc?" · "+autoLoc.name:" · جاري التحديد");
-  a.onclick=()=>{cityIdx=-1;store.set("abudana_city","-1");todayKey="";renderCities();tick();detectLocation()};list.appendChild(a);
-  CITIES.forEach((c,i)=>{const b=document.createElement("button");b.className="btn";b.textContent=c[0];b.setAttribute("aria-pressed",i===cityIdx);
-    b.onclick=()=>{cityIdx=i;store.set("abudana_city",i);todayKey="";renderCities();tick()};list.appendChild(b)});
-  $("#setCity").textContent=curCity()[0];
-}
 
 /* ---------- overlays ---------- */
 let lastFocus=null;
@@ -520,9 +493,8 @@ function adhan(name){
 }
 $("#adStay").onclick=close;
 $("#tLive").onclick=()=>{if(isApp){window.Android.openUrl(LIVE_URL)}else if(!inFrame){location.href=LIVE_URL}else{const w=window.open(LIVE_URL,"_blank");if(!w){const a=$("#adGo");a.click()}}};
-$("#testAdhan").onclick=()=>{close();adhan("الظهر")};
 $("#tLib").onclick=()=>{renderLib("b");open("#ovLib")};
-$("#tSet").onclick=()=>{renderSkins();renderCities();open("#ovSet");const p=$("#cityList [aria-pressed='true']");p&&p.focus()};
+$("#tTheme").onclick=nextSkin;
 document.querySelectorAll("#libTabs .btn").forEach(b=>b.onclick=()=>renderLib(b.dataset.tab));
 document.querySelectorAll(".meal").forEach(t=>t.onclick=()=>openRecipe(todays(t.dataset.meal),t.dataset.meal));
 
@@ -604,11 +576,14 @@ function applySkin(){
   if(s==="auto")s="kiswa";
   if(s==="kiswa")document.documentElement.removeAttribute("data-skin");else document.documentElement.setAttribute("data-skin",s);
 }
-function renderSkins(){
-  const box=$("#skinList");box.innerHTML="";
-  SKINS.forEach(([id,name,c])=>{const b=document.createElement("button");b.className="skin";b.setAttribute("aria-pressed",id===skin);
-    b.innerHTML=`<div class="sw">${c.map(x=>`<i style="background:${x}"></i>`).join("")}</div><b>${name}</b>`;
-    b.onclick=()=>{skin=id;store.set("abudana_skin",id);applySkin();renderSkins();box.children[SKINS.findIndex(x=>x[0]===id)].focus()};box.appendChild(b)});
+function showSkin(){
+  const cur=SKINS.find(x=>x[0]===skin)||SKINS[1];
+  $("#themeName").textContent=cur[1];
+  $("#themeSw").innerHTML=cur[2].map(c=>`<i style="background:${c}"></i>`).join("");
+}
+function nextSkin(){
+  const i=SKINS.findIndex(x=>x[0]===skin);skin=SKINS[(i+1)%SKINS.length][0];
+  store.set("abudana_skin",skin);applySkin();showSkin();
 }
 
 /* ---------- installed apps (Android app only) ---------- */
@@ -629,7 +604,6 @@ function appTile(a){
   return b;
 }
 function openAllApps(){const g=$("#allApps");g.innerHTML="";[...apps].sort((a,b)=>a.label.localeCompare(b.label,"ar")).forEach(a=>g.appendChild(appTile(a)));open("#ovApps")}
-if(window.Android&&window.Android.openSettings){$("#tvSettings").hidden=false;$("#tvSettings").onclick=()=>window.Android.openSettings()}
 
 /* ---------- main loop ---------- */
 function tick(){
@@ -667,7 +641,24 @@ function buildRail(){
 /* ---------- remote control (spatial navigation) ---------- */
 function focusables(){const ov=[...document.querySelectorAll(".ov")].find(o=>!o.hidden);const root=ov||document;
   return [...root.querySelectorAll("button,a.btn,input:not([type=file]),label[tabindex]")].filter(e=>e.offsetParent!==null)}
+function rowItems(r){return [...r.querySelectorAll("button")].filter(e=>e.offsetParent!==null)}
+function moveHome(dir){
+  const rows=[...document.querySelectorAll("[data-row]")].filter(r=>rowItems(r).length);
+  const el=document.activeElement;let ri=rows.findIndex(r=>r.contains(el));
+  if(ri<0){focusEl(rowItems(rows[0])[0]);return}
+  const items=rowItems(rows[ri]),i=items.indexOf(el);
+  if(dir==="left"||dir==="right"){
+    // right-to-left layout: Left goes to the next item, Right to the previous
+    const j=i+(dir==="left"?1:-1);if(items[j])focusEl(items[j]);return;
+  }
+  const nr=rows[ri+(dir==="down"?1:-1)];if(!nr)return;
+  const cx=el.getBoundingClientRect().left+el.offsetWidth/2;let best=null,bd=1e9;
+  rowItems(nr).forEach(e=>{const r=e.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-cx);if(d<bd){bd=d;best=e}});
+  focusEl(best);
+}
+function focusEl(e){if(!e)return;e.focus({preventScroll:true});e.scrollIntoView({block:"nearest",inline:"nearest"})}
 function move(dir){
+  if(![...document.querySelectorAll(".ov")].some(o=>!o.hidden)){moveHome(dir);return}
   const list=focusables();const cur=document.activeElement;
   if(!list.includes(cur)){(list[0]||{}).focus&&list[0].focus();return}
   const a=cur.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;
@@ -676,7 +667,7 @@ function move(dir){
     const ok=dir==="left"?dx<-4:dir==="right"?dx>4:dir==="up"?dy<-4:dy>4;if(!ok)return;
     const main=(dir==="left"||dir==="right")?Math.abs(dx):Math.abs(dy),cross=(dir==="left"||dir==="right")?Math.abs(dy):Math.abs(dx);
     const sc=main+cross*2.2;if(sc<bs){bs=sc;best=e}});
-  if(best){best.focus();best.scrollIntoView({block:"nearest",behavior:"smooth"})}
+  if(best)focusEl(best)
 }
 document.addEventListener("keydown",e=>{
   enableSound();
@@ -702,9 +693,9 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden){wake();ti
 window.abuDanaBack=()=>{if(!player.hidden){$("#pClose").click();return true}return close()};
 if(isApp)enableSound();
 window.abuDanaAppsChanged=loadApps;
-renderCities();tick();applySkin();loadApps();setInterval(tick,1000);wake();
+showSkin();tick();applySkin();loadApps();setInterval(tick,1000);wake();
 // find the location from the internet on start, then refresh it every 6 hours
-detectLocation();setInterval(()=>{if(cityIdx===-1)detectLocation()},6*3600e3);
+detectLocation();setInterval(detectLocation,6*3600e3);
 setTimeout(()=>$("#tLive").focus(),300);
 })();
 </script>

@@ -188,13 +188,15 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // Let the page close its open panel; at the home screen Back does nothing (launcher behaviour)
-            web.evaluateJavascript("window.abuDanaBack && window.abuDanaBack()", null);
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            // Back closes the open panel inside the page; on the home screen it does nothing (launcher behaviour)
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                web.evaluateJavascript("window.abuDanaBack && window.abuDanaBack()", null);
+            }
             return true;
         }
-        return super.onKeyDown(keyCode, event);
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
