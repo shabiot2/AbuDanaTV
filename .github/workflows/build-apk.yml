@@ -1,0 +1,40 @@
+name: Build APK
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build
+        run: gradle assembleRelease --no-daemon
+
+      - name: Rename
+        run: cp app/build/outputs/apk/release/app-release.apk AbuDanaTV.apk
+
+      # Publishes the APK as a GitHub Release so it gets a fixed direct link:
+      # https://github.com/<user>/<repo>/releases/latest/download/AbuDanaTV.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: AbuDanaTV ${{ github.run_number }}
+          files: AbuDanaTV.apk
+          make_latest: true
