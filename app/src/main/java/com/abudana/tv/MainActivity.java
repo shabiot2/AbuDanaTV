@@ -21,6 +21,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +50,7 @@ public class MainActivity extends Activity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         web = new WebView(this);
-        web.setBackgroundColor(Color.parseColor("#0d1311"));
+        web.setBackgroundColor(Color.parseColor("#04060c"));
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -141,6 +146,75 @@ public class MainActivity extends Activity {
                     try { startActivity(i); } catch (Exception ignored) { }
                 }
             });
+        }
+
+        /** Opens the native player with a list of {t: title, u: url, l: logo}. */
+        @JavascriptInterface
+        public void playList(String json, int index, boolean live) {
+            try {
+                JSONArray arr = new JSONArray(json);
+                ArrayList<String[]> list = new ArrayList<>();
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject o = arr.getJSONObject(i);
+                    list.add(new String[]{o.optString("t"), o.optString("u"), o.optString("l")});
+                }
+                if (list.isEmpty()) return;
+                PlayerActivity.items = list;
+                PlayerActivity.startIndex = Math.max(0, Math.min(index, list.size() - 1));
+                PlayerActivity.live = live;
+                runOnUiThread(() -> startActivity(new Intent(MainActivity.this, PlayerActivity.class)));
+            } catch (Exception ignored) { }
+        }
+
+        /** Brings this screen back in front of the player so the adhan alert is seen. */
+        @JavascriptInterface
+        public void adhanFront() {
+            runOnUiThread(PlayerActivity::closeIfOpen);
+        }
+
+        /** Fetches a URL natively (no browser CORS limits) and hands the text back to the page. */
+        @JavascriptInterface
+        public void httpGet(final String id, final String url) {
+            new Thread(() -> {
+                int code = 0;
+                String body = null;
+                try {
+                    String target = url;
+                    for (int hop = 0; hop < 6; hop++) {
+                        HttpURLConnection c = (HttpURLConnection) new URL(target).openConnection();
+                        c.setInstanceFollowRedirects(false);
+                        c.setConnectTimeout(15000);
+                        c.setReadTimeout(30000);
+                        c.setRequestProperty("User-Agent", PlayerActivity.UA);
+                        c.setRequestProperty("Accept", "*/*");
+                        code = c.getResponseCode();
+                        if (code >= 300 && code < 400) {
+                            String loc = c.getHeaderField("Location");
+                            c.disconnect();
+                            if (loc == null) break;
+                            target = new URL(new URL(target), loc).toString();
+                            continue;
+                        }
+                        InputStream in = code >= 400 ? c.getErrorStream() : c.getInputStream();
+                        if (in != null) {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            byte[] buf = new byte[16384];
+                            int n;
+                            while ((n = in.read(buf)) > 0) bos.write(buf, 0, n);
+                            in.close();
+                            body = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+                        }
+                        c.disconnect();
+                        break;
+                    }
+                } catch (Exception e) {
+                    code = 0;
+                    body = null;
+                }
+                final String js = "window.__abuHttp&&window.__abuHttp(" + JSONObject.quote(id) + "," + code + ","
+                        + (body == null ? "null" : JSONObject.quote(body)) + ")";
+                runOnUiThread(() -> { if (web != null) web.evaluateJavascript(js, null); });
+            }).start();
         }
 
         @JavascriptInterface

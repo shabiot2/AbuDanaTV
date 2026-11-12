@@ -22,6 +22,18 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      # Bundle the interface fonts inside the APK so they work even offline
+      - name: Fonts
+        run: |
+          d=app/src/main/assets/fonts
+          mkdir -p $d
+          base=https://raw.githubusercontent.com/google/fonts/main/ofl
+          curl -fsSL "$base/readexpro/ReadexPro%5BHEXP%2Cwght%5D.ttf" -o $d/ReadexPro.ttf || echo "ReadexPro not found"
+          curl -fsSL "$base/reemkufi/ReemKufi%5Bwght%5D.ttf" -o $d/ReemKufi.ttf || echo "ReemKufi not found"
+          curl -fsSL "$base/arefruqaa/ArefRuqaa-Bold.ttf" -o $d/ArefRuqaa-Bold.ttf || echo "ArefRuqaa not found"
+          find $d -type f -size -2k -delete
+          ls -l $d
+
       - name: Build
         run: gradle assembleRelease --no-daemon
 
