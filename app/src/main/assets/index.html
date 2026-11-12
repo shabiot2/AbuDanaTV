@@ -341,10 +341,10 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;fl
   <div class="box">
     <h3 class="box-title">الإعدادات</h3>
     <p class="box-sub">كل اختياراتك تنحفظ تلقائياً.</p>
+    <h4 class="set-h">الموقع</h4>
+    <div class="cities" id="cityList" style="margin-bottom:22px"></div>
     <h4 class="set-h">الثيم</h4>
     <div class="skins" id="skinList"></div>
-    <h4 class="set-h">المدينة</h4>
-    <div class="cities" id="cityList"></div>
     <div class="box-foot">
       <div class="row"><button class="btn" id="testAdhan">تجربة التنبيه</button><button class="btn" id="tvSettings" hidden>إعدادات التلفزيون</button></div>
       <button class="btn pri" data-close>تم</button>
@@ -366,7 +366,24 @@ const CITIES=[
  ["ينبع",24.0890,38.0618],["الخرج",24.1556,47.3122],["عرعر",30.9753,41.0381],["سكاكا",29.9697,40.2064]
 ];
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-let cityIdx=+(store.get("abudana_city")||0); if(!CITIES[cityIdx]) cityIdx=0;
+// -1 = automatic (location from the internet connection)
+let cityIdx=store.get("abudana_city");cityIdx=cityIdx===null?-1:+cityIdx;if(cityIdx!==-1&&!CITIES[cityIdx])cityIdx=-1;
+let autoLoc=null;try{autoLoc=JSON.parse(store.get("abudana_autoloc")||"null")}catch(e){}
+function curCity(){if(cityIdx>=0)return CITIES[cityIdx];return autoLoc?[autoLoc.name,autoLoc.lat,autoLoc.lng]:CITIES[0]}
+function nearestName(lat,lng){let best=null,bd=1e9;CITIES.forEach(c=>{const d=Math.hypot(c[1]-lat,(c[2]-lng)*Math.cos(d2r(lat)));if(d<bd){bd=d;best=c}});return bd<0.5?best[0]:null}
+async function detectLocation(){
+  const tries=[
+    async()=>{const r=await fetch("https://ipwho.is/");const j=await r.json();if(!j.success)throw 0;return{lat:j.latitude,lng:j.longitude,city:j.city}},
+    async()=>{const r=await fetch("https://ipapi.co/json/");const j=await r.json();if(j.latitude==null)throw 0;return{lat:j.latitude,lng:j.longitude,city:j.city}},
+    async()=>{const r=await fetch("https://freeipapi.com/api/json");const j=await r.json();if(j.latitude==null)throw 0;return{lat:j.latitude,lng:j.longitude,city:j.cityName}}
+  ];
+  for(const t of tries){try{const g=await t();const lat=+g.lat,lng=+g.lng;if(!isFinite(lat)||!isFinite(lng))continue;
+      autoLoc={lat,lng,name:nearestName(lat,lng)||g.city||"موقعك",at:Date.now()};store.set("abudana_autoloc",JSON.stringify(autoLoc));
+      if(cityIdx===-1){todayKey="";tick()}
+      if(!$("#ovSet").hidden)renderCities();else $("#setCity").textContent=curCity()[0];
+      return true}catch(e){}}
+  return false;
+}
 
 /* ---------- Umm al-Qura prayer times ---------- */
 const d2r=d=>d*Math.PI/180,r2d=r=>r*180/Math.PI;
@@ -461,9 +478,12 @@ function renderLib(k){
 }
 function renderCities(){
   const list=$("#cityList");list.innerHTML="";
+  const a=document.createElement("button");a.className="btn";a.style.gridColumn="1/-1";a.setAttribute("aria-pressed",cityIdx===-1);
+  a.textContent="📍 تلقائي حسب الإنترنت"+(autoLoc?" · "+autoLoc.name:" · جاري التحديد");
+  a.onclick=()=>{cityIdx=-1;store.set("abudana_city","-1");todayKey="";renderCities();tick();detectLocation()};list.appendChild(a);
   CITIES.forEach((c,i)=>{const b=document.createElement("button");b.className="btn";b.textContent=c[0];b.setAttribute("aria-pressed",i===cityIdx);
     b.onclick=()=>{cityIdx=i;store.set("abudana_city",i);todayKey="";renderCities();tick()};list.appendChild(b)});
-  $("#setCity").textContent=CITIES[cityIdx][0];
+  $("#setCity").textContent=curCity()[0];
 }
 
 /* ---------- overlays ---------- */
@@ -502,7 +522,7 @@ $("#adStay").onclick=close;
 $("#tLive").onclick=()=>{if(isApp){window.Android.openUrl(LIVE_URL)}else if(!inFrame){location.href=LIVE_URL}else{const w=window.open(LIVE_URL,"_blank");if(!w){const a=$("#adGo");a.click()}}};
 $("#testAdhan").onclick=()=>{close();adhan("الظهر")};
 $("#tLib").onclick=()=>{renderLib("b");open("#ovLib")};
-$("#tSet").onclick=()=>{renderSkins();renderCities();open("#ovSet");const p=$("#skinList [aria-pressed='true']");p&&p.focus()};
+$("#tSet").onclick=()=>{renderSkins();renderCities();open("#ovSet");const p=$("#cityList [aria-pressed='true']");p&&p.focus()};
 document.querySelectorAll("#libTabs .btn").forEach(b=>b.onclick=()=>renderLib(b.dataset.tab));
 document.querySelectorAll(".meal").forEach(t=>t.onclick=()=>openRecipe(todays(t.dataset.meal),t.dataset.meal));
 
@@ -613,8 +633,8 @@ if(window.Android&&window.Android.openSettings){$("#tvSettings").hidden=false;$(
 
 /* ---------- main loop ---------- */
 function tick(){
-  const now=new Date(),c=CITIES[cityIdx];
-  const key=now.toDateString()+cityIdx;
+  const now=new Date(),c=curCity();
+  const key=now.toDateString()+c[1].toFixed(3)+c[2].toFixed(3);
   if(key!==todayKey){today=calc(now,c[1],c[2]);todayKey=key;renderMeals();buildRail()}
   if(skin==="auto"&&now.getSeconds()===0)applySkin();
   // clock
@@ -683,6 +703,8 @@ window.abuDanaBack=()=>{if(!player.hidden){$("#pClose").click();return true}retu
 if(isApp)enableSound();
 window.abuDanaAppsChanged=loadApps;
 renderCities();tick();applySkin();loadApps();setInterval(tick,1000);wake();
+// find the location from the internet on start, then refresh it every 6 hours
+detectLocation();setInterval(()=>{if(cityIdx===-1)detectLocation()},6*3600e3);
 setTimeout(()=>$("#tLive").focus(),300);
 })();
 </script>
