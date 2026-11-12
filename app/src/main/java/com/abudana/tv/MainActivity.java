@@ -53,15 +53,12 @@ public class MainActivity extends Activity {
         s.setAllowFileAccess(true);
         s.setAllowUniversalAccessFromFileURLs(true);
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        // Lay the page out at a fixed 1920px-wide TV canvas, then scale it to the real screen.
-        // Without this, TVs that report a low density get the phone layout blown up.
-        s.setLoadWithOverviewMode(false);
-        s.setUseWideViewPort(false);
+        // The page declares a fixed 1920px-wide viewport; the WebView fits that canvas to the
+        // real screen, whatever resolution or density the TV reports.
+        s.setUseWideViewPort(true);
+        s.setLoadWithOverviewMode(true);
         s.setTextZoom(100);
-        android.util.DisplayMetrics dm = new android.util.DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(dm);
-        int screenW = Math.max(dm.widthPixels, dm.heightPixels);
-        web.setInitialScale(Math.max(1, Math.round(screenW * 100f / 1920f)));
+        s.setSupportZoom(false);
         web.setWebChromeClient(new WebChromeClient());
         web.setWebViewClient(new WebViewClient() {
             @Override
